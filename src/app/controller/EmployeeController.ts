@@ -9,6 +9,7 @@ import authorize from "../middleware/authorizationMiddleware";
 import {Role} from '../constants'
 import { UpdateEmployeeDto } from "../dto/UpdateEmployeeDto";
 import { UpdateAddressDto } from "../dto/UpdateAddress";
+import { PatchUpdateEmployeeDto } from "../dto/PatchUpdateEmployee";
 
 class EmployeeController extends AbstractController {
   constructor(private employeeService: EmployeeService) {
@@ -23,6 +24,7 @@ class EmployeeController extends AbstractController {
     this.router.delete(`${this.path}/:id`,authorize([Role.ADMIN,Role.HR]), this.deleteEmployee);
     this.router.put(`${this.path}/:id/address`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(UpdateAddressDto, APP_CONSTANTS.body), this.updateAddress)
     this.router.post(`${this.path}/login`,this.login);
+    this.router.patch(`${this.path}/:id`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(PatchUpdateEmployeeDto, APP_CONSTANTS.body), this.patchUpdateEmployee);
   }
   private getAllEmployees = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
@@ -84,6 +86,16 @@ class EmployeeController extends AbstractController {
     const address: UpdateAddressDto = request.body;
     const id = request.params.id;
     response.send(await this.employeeService.updateAddress(id, address));
+    response.status(200);
+    }catch(error){
+      return next(error)
+    }
+  };
+  private patchUpdateEmployee = async (request: RequestWithUser,response: Response,next: NextFunction) => {
+    try{
+    const address: PatchUpdateEmployeeDto = request.body;
+    const id = request.params.id;
+    response.send(await this.employeeService.patchUpdateAddress(id, address));
     response.status(200);
     }catch(error){
       return next(error)

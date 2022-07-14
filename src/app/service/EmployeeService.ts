@@ -14,6 +14,7 @@ import { CreateEmployeeDto } from "../dto/CreateEmployee";
 import { UpdateEmployeeDto } from "../dto/UpdateEmployeeDto";
 import { Address } from "../entities/Address";
 import { UpdateAddressDto } from "../dto/UpdateAddress";
+import { PatchUpdateEmployeeDto } from "../dto/PatchUpdateEmployee";
 
 export class EmployeeService{
 
@@ -108,6 +109,26 @@ export class EmployeeService{
     });
         return await this.employeeRepo.updateEmployee(id, newEmployee);
     }
+
+    async patchUpdateAddress(id: string, patchUpdate: PatchUpdateEmployeeDto){
+      const employeeResp =  await this.employeeRepo.getEmployeeById(id);
+        if(!employeeResp) {
+            throw new EntityNotFoundException(ErrorCodes.USER_WITH_ID_NOT_FOUND)
+        }
+        const newEmployee: Employee = plainToClass(Employee, {
+          name: patchUpdate.name || employeeResp.name,
+          password: patchUpdate.password ?  await bcrypt.hash(patchUpdate.password, 10): employeeResp.password,
+          departmentId: patchUpdate.departmentId || employeeResp.departmentId,
+          email: patchUpdate.email || employeeResp.email,
+          role: patchUpdate.role || employeeResp.role,
+          status: patchUpdate.status || employeeResp.status,
+          addressZipCode: patchUpdate.addressZipCode || employeeResp.addressZipCode,
+          experience: patchUpdate.experience || employeeResp.experience,
+          joiningDate: patchUpdate.joiningDate || employeeResp.joiningDate
+      });
+          return await this.employeeRepo.updateEmployee(id, newEmployee);
+    }
+
     async deleteEmployee(id: string){
       const employeeResp =  await this.employeeRepo.getEmployeeById(id);
         if(!employeeResp) {
