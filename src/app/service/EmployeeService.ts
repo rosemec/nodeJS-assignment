@@ -91,6 +91,10 @@ export class EmployeeService{
         return employeeResp
     }
     async updateEmployee(id:string, updateEmp: UpdateEmployeeDto){
+      const employeeResp =  await this.employeeRepo.getEmployeeById(id);
+        if(!employeeResp) {
+            throw new EntityNotFoundException(ErrorCodes.USER_WITH_ID_NOT_FOUND)
+        }
       const newEmployee: Employee = plainToClass(Employee, {
         name: updateEmp.name,
         password: updateEmp.password ?  await bcrypt.hash(updateEmp.password, 10): '',
@@ -102,10 +106,13 @@ export class EmployeeService{
         experience: updateEmp.experience,
         joiningDate: updateEmp.joiningDate
     });
-        const employeeResp = await this.employeeRepo.updateEmployee(id, newEmployee);
-        return employeeResp;
+        return await this.employeeRepo.updateEmployee(id, newEmployee);
     }
     async deleteEmployee(id: string){
+      const employeeResp =  await this.employeeRepo.getEmployeeById(id);
+        if(!employeeResp) {
+            throw new EntityNotFoundException(ErrorCodes.USER_WITH_ID_NOT_FOUND)
+        }
         const deleteResp = await this.employeeRepo.deleteEmployee(id);
         return deleteResp;
     }
