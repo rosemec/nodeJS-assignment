@@ -15,6 +15,7 @@ import { UpdateEmployeeDto } from "../dto/UpdateEmployeeDto";
 import { Address } from "../entities/Address";
 import { UpdateAddressDto } from "../dto/UpdateAddress";
 import { PatchUpdateEmployeeDto } from "../dto/PatchUpdateEmployee";
+import { Department } from "../entities/Department";
 
 export class EmployeeService{
 
@@ -29,46 +30,80 @@ export class EmployeeService{
     //    return await this.employeeRepo.createEmployee(employee)
     // }
 
+    // public async createEmployee(employeeDetails: CreateEmployeeDto) {
+    //     try {
+    //         if (employeeDetails.address){
+    //             var newEmployee: Employee = plainToClass(Employee, {
+    //                 name: employeeDetails.name,
+    //                 password: employeeDetails.password ?  await bcrypt.hash(employeeDetails.password, 10): '',
+    //                 departmentId: employeeDetails.departmentId,
+    //                 email: employeeDetails.email,
+    //                 role: employeeDetails.role,
+    //                 status: employeeDetails.status,
+    //                 addressZipCode: employeeDetails.addressZipCode,
+    //                 address:{
+    //                     city: employeeDetails.address.city,
+    //                     district: employeeDetails.address.district,
+    //                     state: employeeDetails.address.state,
+    //                     zipCode: employeeDetails.address.zipCode
+    //                 },
+    //                 experience: employeeDetails.experience,
+    //                 joiningDate: employeeDetails.joiningDate
+    //             });
+    //         } else {
+    //             var newEmployee: Employee = plainToClass(Employee, {
+    //                 name: employeeDetails.name,
+    //                 password: employeeDetails.password ?  await bcrypt.hash(employeeDetails.password, 10): '',
+    //                 departmentId: employeeDetails.departmentId,
+    //                 email: employeeDetails.email,
+    //                 role: employeeDetails.role,
+    //                 status: employeeDetails.status,
+    //                 addressZipCode: employeeDetails.addressZipCode,
+    //                 experience: employeeDetails.experience,
+    //                 joiningDate: employeeDetails.joiningDate
+    //             });
+    //         }
+    //         console.log(newEmployee)
+    //         const save = await this.employeeRepo.createEmployee(newEmployee);
+    //         return save;
+    //     } catch (err) {
+    //         //throw new HttpException(400, "Failed to create employee");
+    //     }
+    // }
+
     public async createEmployee(employeeDetails: CreateEmployeeDto) {
-        try {
-            if (employeeDetails.address){
-                var newEmployee: Employee = plainToClass(Employee, {
-                    name: employeeDetails.name,
-                    password: employeeDetails.password ?  await bcrypt.hash(employeeDetails.password, 10): '',
-                    departmentId: employeeDetails.departmentId,
-                    email: employeeDetails.email,
-                    role: employeeDetails.role,
-                    status: employeeDetails.status,
-                    addressZipCode: employeeDetails.addressZipCode,
-                    address:{
-                        city: employeeDetails.address.city,
-                        district: employeeDetails.address.district,
-                        state: employeeDetails.address.state,
-                        zipCode: employeeDetails.address.zipCode
-                    },
-                    experience: employeeDetails.experience,
-                    joiningDate: employeeDetails.joiningDate
-                });
-            } else {
-                var newEmployee: Employee = plainToClass(Employee, {
-                    name: employeeDetails.name,
-                    password: employeeDetails.password ?  await bcrypt.hash(employeeDetails.password, 10): '',
-                    departmentId: employeeDetails.departmentId,
-                    email: employeeDetails.email,
-                    role: employeeDetails.role,
-                    status: employeeDetails.status,
-                    addressZipCode: employeeDetails.addressZipCode,
-                    experience: employeeDetails.experience,
-                    joiningDate: employeeDetails.joiningDate
-                });
+      try {
+            const newEmployee = new Employee();
+            newEmployee.name = employeeDetails.name
+            newEmployee.password = employeeDetails.password ?  await bcrypt.hash(employeeDetails.password, 10): ''
+            newEmployee.email = employeeDetails.email
+            newEmployee.role = employeeDetails.role
+            newEmployee.status = employeeDetails.status
+            newEmployee.experience = employeeDetails.experience,
+            newEmployee.joiningDate = employeeDetails.joiningDate
+            newEmployee.addressZipCode = employeeDetails.addressZipCode
+            if(employeeDetails.departmentId){
+              newEmployee.departmentId = employeeDetails.departmentId
             }
-            console.log(newEmployee)
-            const save = await this.employeeRepo.createEmployee(newEmployee);
-            return save;
-        } catch (err) {
-            //throw new HttpException(400, "Failed to create employee");
-        }
-    }
+            if(employeeDetails.department){
+              newEmployee.department = new Department()
+              newEmployee.department.name = employeeDetails.department.name
+            }
+            if(employeeDetails.address){
+                  newEmployee.address = new Address()
+                  newEmployee.address.city = employeeDetails.address.city,
+                  newEmployee.address.district = employeeDetails.address.district,
+                  newEmployee.address.state = employeeDetails.address.state,
+                  newEmployee.address.zipCode = employeeDetails.address.zipCode
+            }
+          console.log(newEmployee)
+          const save = await this.employeeRepo.createEmployee(newEmployee);
+          return save;
+      } catch (err) {
+          //throw new HttpException(400, "Failed to create employee");
+          console.log
+      }
+  }
 
     async updateAddress(id: string, address: UpdateAddressDto){
       const employeeDetails = await this.employeeRepo.getEmployeeById(id);
