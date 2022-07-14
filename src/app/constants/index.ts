@@ -12,3 +12,6 @@ const APP_CONSTANTS = {
 };
 
 export default APP_CONSTANTS;
+
+
+export enum Role {ADMIN= "admin",HR= "hr",MANAGER= "manager",ENGINEER= "engineer"} 
