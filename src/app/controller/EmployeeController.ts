@@ -56,8 +56,8 @@ class EmployeeController extends AbstractController {
     try {
         const id = request.params.id
         const updateEmployee : UpdateEmployeeDto = request.body
-      response.status(200);
       response.send(await this.employeeService.updateEmployee(id, updateEmployee));
+      response.status(200);
     } catch (error) {
       return next(error);
     }
@@ -65,8 +65,8 @@ class EmployeeController extends AbstractController {
   private deleteEmployee = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
         const id = request.params.id
-      response.status(200);
       response.send(await this.employeeService.deleteEmployee(id));
+    response.status(200);
     } catch (error) {
       return next(error);
     }
@@ -83,8 +83,8 @@ class EmployeeController extends AbstractController {
     try{
     const address: UpdateAddressDto = request.body;
     const id = request.params.id;
-    response.status(200);
     response.send(await this.employeeService.updateAddress(id, address));
+    response.status(200);
     }catch(error){
       return next(error)
     }

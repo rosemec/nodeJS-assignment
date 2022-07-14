@@ -1,4 +1,7 @@
+import { plainToClass } from "class-transformer";
 import { ObjectLiteral } from "typeorm";
+import { CreateAddressDto } from "../dto/CreateAddress";
+import { Address } from "../entities/Address";
 import { AddressRespository } from "../repository/AddressRepository";
 
 export default class AddressService {
@@ -9,7 +12,13 @@ export default class AddressService {
         const addressResp = this.addressRepo.getAddress()
         return addressResp;
     }
-    async createAddress(address: ObjectLiteral){
-        return await this.addressRepo.createAddress(address)
+    async createAddress(address: CreateAddressDto){
+        const newAddress: Address = plainToClass(Address,{
+            zipCode:address.zipCode,
+            city:address.city,
+            state:address.state,
+            district:address.district
+        })
+        return await this.addressRepo.createAddress(newAddress)
     }
 }

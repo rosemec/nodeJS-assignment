@@ -6,7 +6,7 @@ export class AddressRespository{
          const addressRepo = getConnection().getRepository(Address);
         return addressRepo.find();
     }
-    async createAddress(address: ObjectLiteral){
+    async createAddress(address: Address){
         const addressRepo = getConnection().getRepository(Address);
         return await addressRepo.save(address);
     }
