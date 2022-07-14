@@ -13,7 +13,7 @@ export default class DepartmentService {
 
     }
     async getAllDepartments(){
-        const departmentResp = this.departmentRepo.getAllDepartments()
+        const departmentResp = await this.departmentRepo.getAllDepartments()
         return departmentResp;
     }
     async createDepartment(department: CreateDepartmentDto){
@@ -23,7 +23,7 @@ export default class DepartmentService {
         return await this.departmentRepo.createDepartment(newDept)
     }
     async updateDepartment(id: string, updateDept: UpdateDepartmentDto){
-        const deptDetails = this.departmentRepo.getDepartmentById(id);
+        const deptDetails = await this.departmentRepo.getDepartmentById(id);
         if(!deptDetails){
             throw new EntityNotFoundException(ErrorCodes.DEPARTMENT_NOT_FOUND)
         }
@@ -33,14 +33,14 @@ export default class DepartmentService {
         return await this.departmentRepo.updateDepartment(id, newDept)   
     }
     async deleteDepartment(id: string){
-        const deptDetails = this.departmentRepo.getDepartmentById(id);
+        const deptDetails = await this.departmentRepo.getDepartmentById(id);
         if(!deptDetails){
             throw new EntityNotFoundException(ErrorCodes.DEPARTMENT_NOT_FOUND)
         }
         return await this.departmentRepo.deleteDepartment(id)
     }
     async getDepartmentById(id: string){
-        const deptDetails = this.departmentRepo.getDepartmentById(id);
+        const deptDetails = await this.departmentRepo.getDepartmentById(id);
         if(!deptDetails){
             throw new EntityNotFoundException(ErrorCodes.DEPARTMENT_NOT_FOUND)
         }
