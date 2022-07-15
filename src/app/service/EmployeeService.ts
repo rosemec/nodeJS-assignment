@@ -100,8 +100,8 @@ export class EmployeeService{
           const save = await this.employeeRepo.createEmployee(newEmployee);
           return save;
       } catch (err) {
-          //throw new HttpException(400, "Failed to create employee");
-          console.log
+          throw new HttpException(400, "Failed to create employee", err.message);
+          //console.log(err)
       }
   }
 
@@ -110,13 +110,17 @@ export class EmployeeService{
         if (!employeeDetails) {
           throw new EntityNotFoundException(ErrorCodes.USER_NOT_FOUND);
         }
-        const newAddress: Address = plainToClass(Address, {
-          zipCode: address.zipCode,
-          city: address.city,
-          district: address.district,
-          state:address.state
-      });
-        return await this.employeeRepo.updateAddress(employeeDetails.addressZipCode, newAddress)
+        try{
+          const newAddress: Address = plainToClass(Address, {
+            zipCode: address.zipCode,
+            city: address.city,
+            district: address.district,
+            state:address.state
+          });
+          return await this.employeeRepo.updateAddress(employeeDetails.addressZipCode, newAddress)
+        }catch(err){
+          throw new HttpException(400, "Failed to update address", err.message);
+        }  
     }
 
     async getEmployeeById(id: string){
@@ -131,18 +135,23 @@ export class EmployeeService{
         if(!employeeResp) {
             throw new EntityNotFoundException(ErrorCodes.USER_WITH_ID_NOT_FOUND)
         }
-      const newEmployee: Employee = plainToClass(Employee, {
-        name: updateEmp.name,
-        password: updateEmp.password ?  await bcrypt.hash(updateEmp.password, 10): '',
-        departmentId: updateEmp.departmentId,
-        email: updateEmp.email,
-        role: updateEmp.role,
-        status: updateEmp.status,
-        addressZipCode: updateEmp.addressZipCode,
-        experience: updateEmp.experience,
-        joiningDate: updateEmp.joiningDate
-    });
-        return await this.employeeRepo.updateEmployee(id, newEmployee);
+        try{
+            const newEmployee: Employee = plainToClass(Employee, {
+            name: updateEmp.name,
+            password: updateEmp.password ?  await bcrypt.hash(updateEmp.password, 10): '',
+            departmentId: updateEmp.departmentId,
+            email: updateEmp.email,
+            role: updateEmp.role,
+            status: updateEmp.status,
+            addressZipCode: updateEmp.addressZipCode,
+            experience: updateEmp.experience,
+            joiningDate: updateEmp.joiningDate
+        });
+            return await this.employeeRepo.updateEmployee(id, newEmployee);
+        }catch(err){
+          throw new HttpException(400, "Failed to update employee", err.message);
+        }
+      
     }
 
     async patchUpdateAddress(id: string, patchUpdate: PatchUpdateEmployeeDto){
@@ -150,18 +159,23 @@ export class EmployeeService{
         if(!employeeResp) {
             throw new EntityNotFoundException(ErrorCodes.USER_WITH_ID_NOT_FOUND)
         }
-        const newEmployee: Employee = plainToClass(Employee, {
-          name: patchUpdate.name || employeeResp.name,
-          password: patchUpdate.password ?  await bcrypt.hash(patchUpdate.password, 10): employeeResp.password,
-          departmentId: patchUpdate.departmentId || employeeResp.departmentId,
-          email: patchUpdate.email || employeeResp.email,
-          role: patchUpdate.role || employeeResp.role,
-          status: patchUpdate.status || employeeResp.status,
-          addressZipCode: patchUpdate.addressZipCode || employeeResp.addressZipCode,
-          experience: patchUpdate.experience || employeeResp.experience,
-          joiningDate: patchUpdate.joiningDate || employeeResp.joiningDate
-      });
-          return await this.employeeRepo.updateEmployee(id, newEmployee);
+        try{
+            const newEmployee: Employee = plainToClass(Employee, {
+            name: patchUpdate.name || employeeResp.name,
+            password: patchUpdate.password ?  await bcrypt.hash(patchUpdate.password, 10): employeeResp.password,
+            departmentId: patchUpdate.departmentId || employeeResp.departmentId,
+            email: patchUpdate.email || employeeResp.email,
+            role: patchUpdate.role || employeeResp.role,
+            status: patchUpdate.status || employeeResp.status,
+            addressZipCode: patchUpdate.addressZipCode || employeeResp.addressZipCode,
+            experience: patchUpdate.experience || employeeResp.experience,
+            joiningDate: patchUpdate.joiningDate || employeeResp.joiningDate
+        });
+            return await this.employeeRepo.updateEmployee(id, newEmployee);
+        }catch(err){
+          throw new HttpException(400, "Failed to update employee", err.message);
+        }
+        
     }
 
     async deleteEmployee(id: string){
