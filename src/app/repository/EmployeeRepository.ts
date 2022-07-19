@@ -5,7 +5,7 @@ import { Employee } from "../entities/Employee";
 export class EmployeeRespository{
     async getAllEmployees(){
         const employeeRepo = getConnection().getRepository(Employee);
-        return employeeRepo.find({relations:["department", "address"]})
+        return employeeRepo.find()
     }
     async createEmployee(employee: Employee){
         const employeeRepo = getConnection().getRepository(Employee);
@@ -13,7 +13,7 @@ export class EmployeeRespository{
     }
     async getEmployeeById(id: any){
         const employeeRepo = getConnection().getRepository(Employee);
-        return await employeeRepo.findOne(id,{relations:["department", "address"]});
+        return await employeeRepo.findOne(id);
     }
     async updateEmployee(id: string, updateEmp: Employee){
         const employeeRepo = getConnection().getRepository(Employee);
@@ -30,8 +30,8 @@ export class EmployeeRespository{
         });
         return employeeDetail;
     }
-    async updateAddress(id :string, address: Address){
-        const addressRepo = getConnection().getRepository(Address);
-        return await addressRepo.update(id, address)
-    }
+    // async updateAddress(id :string, address: Address){
+    //     const addressRepo = getConnection().getRepository(Address);
+    //     return await addressRepo.update(id, address)
+    // }
 }

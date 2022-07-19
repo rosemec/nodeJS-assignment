@@ -80,22 +80,23 @@ export class EmployeeService{
             newEmployee.role = employeeDetails.role
             newEmployee.status = employeeDetails.status
             newEmployee.experience = employeeDetails.experience,
-            newEmployee.joiningDate = employeeDetails.joiningDate
-            newEmployee.addressZipCode = employeeDetails.addressZipCode
-            if(employeeDetails.departmentId){
-              newEmployee.departmentId = employeeDetails.departmentId
-            }
-            if(employeeDetails.department){
-              newEmployee.department = new Department()
-              newEmployee.department.name = employeeDetails.department.name
-            }
-            if(employeeDetails.address){
-                  newEmployee.address = new Address()
-                  newEmployee.address.city = employeeDetails.address.city,
-                  newEmployee.address.district = employeeDetails.address.district,
-                  newEmployee.address.state = employeeDetails.address.state,
-                  newEmployee.address.zipCode = employeeDetails.address.zipCode
-            }
+            newEmployee.joiningDate = employeeDetails.joiningDate,
+            newEmployee.address = employeeDetails.address
+            newEmployee.empId = employeeDetails.empId
+            // if(employeeDetails.departmentId){
+            //   newEmployee.departmentId = employeeDetails.departmentId
+            // }
+            // if(employeeDetails.department){
+            //   newEmployee.department = new Department()
+            //   newEmployee.department.name = employeeDetails.department.name
+            // }
+            // if(employeeDetails.address){
+            //       newEmployee.address = new Address()
+            //       newEmployee.address.city = employeeDetails.address.city,
+            //       newEmployee.address.district = employeeDetails.address.district,
+            //       newEmployee.address.state = employeeDetails.address.state,
+            //       newEmployee.address.zipCode = employeeDetails.address.zipCode
+            // }
           console.log(newEmployee)
           const save = await this.employeeRepo.createEmployee(newEmployee);
           return save;
@@ -105,23 +106,23 @@ export class EmployeeService{
       }
   }
 
-    async updateAddress(id: string, address: UpdateAddressDto){
-      const employeeDetails = await this.employeeRepo.getEmployeeById(id);
-        if (!employeeDetails) {
-          throw new EntityNotFoundException(ErrorCodes.USER_NOT_FOUND);
-        }
-        try{
-          const newAddress: Address = plainToClass(Address, {
-            zipCode: address.zipCode,
-            city: address.city,
-            district: address.district,
-            state:address.state
-          });
-          return await this.employeeRepo.updateAddress(employeeDetails.addressZipCode, newAddress)
-        }catch(err){
-          throw new HttpException(400, "Failed to update address", err.message);
-        }  
-    }
+    // async updateAddress(id: string, address: UpdateAddressDto){
+    //   const employeeDetails = await this.employeeRepo.getEmployeeById(id);
+    //     if (!employeeDetails) {
+    //       throw new EntityNotFoundException(ErrorCodes.USER_NOT_FOUND);
+    //     }
+    //     try{
+    //       const newAddress: Address = plainToClass(Address, {
+    //         zipCode: address.zipCode,
+    //         city: address.city,
+    //         district: address.district,
+    //         state:address.state
+    //       });
+    //       return await this.employeeRepo.updateAddress(employeeDetails.addressZipCode, newAddress)
+    //     }catch(err){
+    //       throw new HttpException(400, "Failed to update address", err.message);
+    //     }  
+    // }
 
     async getEmployeeById(id: string){
         const employeeResp =  await this.employeeRepo.getEmployeeById(id);
@@ -139,13 +140,14 @@ export class EmployeeService{
             const newEmployee: Employee = plainToClass(Employee, {
             name: updateEmp.name,
             password: updateEmp.password ?  await bcrypt.hash(updateEmp.password, 10): '',
-            departmentId: updateEmp.departmentId,
+            //departmentId: updateEmp.departmentId,
             email: updateEmp.email,
             role: updateEmp.role,
             status: updateEmp.status,
-            addressZipCode: updateEmp.addressZipCode,
+            address: updateEmp.address,
             experience: updateEmp.experience,
-            joiningDate: updateEmp.joiningDate
+            joiningDate: updateEmp.joiningDate,
+            empId : updateEmp.empId
         });
             return await this.employeeRepo.updateEmployee(id, newEmployee);
         }catch(err){
@@ -163,13 +165,14 @@ export class EmployeeService{
             const newEmployee: Employee = plainToClass(Employee, {
             name: patchUpdate.name || employeeResp.name,
             password: patchUpdate.password ?  await bcrypt.hash(patchUpdate.password, 10): employeeResp.password,
-            departmentId: patchUpdate.departmentId || employeeResp.departmentId,
+            //departmentId: patchUpdate.departmentId || employeeResp.departmentId,
             email: patchUpdate.email || employeeResp.email,
             role: patchUpdate.role || employeeResp.role,
             status: patchUpdate.status || employeeResp.status,
-            addressZipCode: patchUpdate.addressZipCode || employeeResp.addressZipCode,
+            addressZipCode: patchUpdate.address || employeeResp.address,
             experience: patchUpdate.experience || employeeResp.experience,
-            joiningDate: patchUpdate.joiningDate || employeeResp.joiningDate
+            joiningDate: patchUpdate.joiningDate || employeeResp.joiningDate,
+            empId : patchUpdate.empId
         });
             return await this.employeeRepo.updateEmployee(id, newEmployee);
         }catch(err){

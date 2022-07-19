@@ -14,9 +14,9 @@ export class CreateEmployeeDto{
     @IsString()
     public email: string;
 
-    @IsOptional()
-    @IsString()
-    public departmentId: string
+    // @IsOptional()
+    // @IsString()
+    // public departmentId: string
 
     @IsOptional()
     @IsString()
@@ -27,21 +27,25 @@ export class CreateEmployeeDto{
     public status?: string
 
     @IsOptional()
-    @IsNumber()
-    public experience?: number
+    @IsString()
+    public experience?: string
 
     @IsString()
-    public addressZipCode: string
+    public address: string
 
     @IsOptional()
     @IsString()
     public password?: string
 
-    @ValidateNested({each: true})
-    @Type(()=>CreateAddressDto)
-    public address?: CreateAddressDto
+    @IsString()
+    public empId: string
 
-    @ValidateNested({each: true})
-    @Type(()=>CreateDepartmentDto)
-    public department?: CreateDepartmentDto
+
+    // @ValidateNested({each: true})
+    // @Type(()=>CreateAddressDto)
+    // public address?: CreateAddressDto
+
+    // @ValidateNested({each: true})
+    // @Type(()=>CreateDepartmentDto)
+    // public department?: CreateDepartmentDto
 }

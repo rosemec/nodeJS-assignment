@@ -12,14 +12,14 @@ import { Department } from './Department';
         @Column({ nullable: false })
         public name: string;
 
-        @Column({nullable: true})
-        public departmentId: string;
+        // @Column({nullable: true})
+        // public departmentId: string;
 
         @Column()
         public joiningDate: string
 
-        @Column({nullable: true})
-        public addressZipCode: string
+        // @Column({nullable: true})
+        // public addressZipCode: string
 
         @Column()
         public email: string
@@ -30,17 +30,23 @@ import { Department } from './Department';
         @Column({nullable: true})
         public status: string
 
-        @Column({default: 0})
-        public experience: number
+        @Column({default: "0 Years"})
+        public experience: string
 
         @Column({nullable: true})
         public password: string
 
-    @ManyToOne(()=> Department, {cascade: true})
-    @JoinColumn()
-    public department: Department;
+        @Column()
+        public address: string
 
-    @OneToOne(() => Address, {cascade: true})
-    @JoinColumn()
-    public address: Address;
+        @Column()
+        public empId: string
+
+    // @ManyToOne(()=> Department, {cascade: true})
+    // @JoinColumn()
+    // public department: Department;
+
+    // @OneToOne(() => Address, {cascade: true})
+    // @JoinColumn()
+    // public address: Address;
 }

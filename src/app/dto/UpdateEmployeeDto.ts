@@ -12,9 +12,9 @@ export class UpdateEmployeeDto{
     @IsString()
     public email: string;
 
-    @IsOptional()
-    @IsString()
-    public departmentId: string
+    // @IsOptional()
+    // @IsString()
+    // public departmentId: string
 
     @IsOptional()
     @IsString()
@@ -25,13 +25,16 @@ export class UpdateEmployeeDto{
     public status?: string
 
     @IsOptional()
-    @IsNumber()
-    public experience?: number
+    @IsString()
+    public experience?: string
 
     @IsString()
-    public addressZipCode: string
+    public address: string
 
     @IsOptional()
     @IsString()
     public password?: string
+
+    @IsString()
+    public empId : string
 }

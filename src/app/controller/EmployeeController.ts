@@ -17,14 +17,18 @@ class EmployeeController extends AbstractController {
     this.initializeRoutes();
   }
   protected initializeRoutes() {
-    this.router.get(`${this.path}`, authorize([Role.ADMIN, Role.ENGINEER, Role.HR, Role.MANAGER]), this.getAllEmployees);
-    this.router.post(`${this.path}`,authorize([Role.ADMIN,Role.HR]), validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), this.createEmployees);
-    this.router.get(`${this.path}/:id`, authorize([Role.ADMIN, Role.ENGINEER, Role.HR, Role.MANAGER]), this.getEmployee);
-    this.router.put(`${this.path}/:id`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(UpdateEmployeeDto, APP_CONSTANTS.body), this.updateEmployee);
-    this.router.delete(`${this.path}/:id`,authorize([Role.ADMIN,Role.HR]), this.deleteEmployee);
-    this.router.put(`${this.path}/:id/address`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(UpdateAddressDto, APP_CONSTANTS.body), this.updateAddress)
+    this.router.get(`${this.path}`, this.getAllEmployees);
+    //this.router.post(`${this.path}`,authorize([Role.ADMIN,Role.HR]), validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), this.createEmployees);
+    this.router.post(`${this.path}`, validationMiddleware(CreateEmployeeDto, APP_CONSTANTS.body), this.createEmployees);
+    //this.router.get(`${this.path}/:id`, authorize([Role.ADMIN, Role.ENGINEER, Role.HR, Role.MANAGER]), this.getEmployee);
+    this.router.get(`${this.path}/:id`, this.getEmployee);
+    //this.router.put(`${this.path}/:id`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(UpdateEmployeeDto, APP_CONSTANTS.body), this.updateEmployee);
+    this.router.put(`${this.path}/:id`, validationMiddleware(UpdateEmployeeDto, APP_CONSTANTS.body), this.updateEmployee);
+    //this.router.delete(`${this.path}/:id`,authorize([Role.ADMIN,Role.HR]), this.deleteEmployee);
+    this.router.delete(`${this.path}/:id`, this.deleteEmployee);
+    //this.router.put(`${this.path}/:id/address`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(UpdateAddressDto, APP_CONSTANTS.body), this.updateAddress)
     this.router.post(`${this.path}/login`,this.login);
-    this.router.patch(`${this.path}/:id`, authorize([Role.ADMIN,Role.HR]), validationMiddleware(PatchUpdateEmployeeDto, APP_CONSTANTS.body), this.patchUpdateEmployee);
+    this.router.patch(`${this.path}/:id`,  this.patchUpdateEmployee);
   }
   private getAllEmployees = async (request: RequestWithUser, response: Response, next: NextFunction) => {
     try {
@@ -81,16 +85,16 @@ class EmployeeController extends AbstractController {
     );
     response.send(this.fmt.formatResponse(loginDetail, Date.now() - request.startTime, "OK"));
   };
-  private updateAddress = async (request: RequestWithUser,response: Response,next: NextFunction) => {
-    try{
-    const address: UpdateAddressDto = request.body;
-    const id = request.params.id;
-    response.send(await this.employeeService.updateAddress(id, address));
-    response.status(200);
-    }catch(error){
-      return next(error)
-    }
-  };
+  // private updateAddress = async (request: RequestWithUser,response: Response,next: NextFunction) => {
+  //   try{
+  //   const address: UpdateAddressDto = request.body;
+  //   const id = request.params.id;
+  //   response.send(await this.employeeService.updateAddress(id, address));
+  //   response.status(200);
+  //   }catch(error){
+  //     return next(error)
+  //   }
+  // };
   private patchUpdateEmployee = async (request: RequestWithUser,response: Response,next: NextFunction) => {
     try{
     const address: PatchUpdateEmployeeDto = request.body;

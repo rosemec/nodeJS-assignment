@@ -15,9 +15,9 @@ export class PatchUpdateEmployeeDto{
     @IsOptional()
     public email: string;
 
-    @IsOptional()
-    @IsString()
-    public departmentId: string
+    // @IsOptional()
+    // @IsString()
+    // public departmentId: string
 
     @IsOptional()
     @IsString()
@@ -28,14 +28,18 @@ export class PatchUpdateEmployeeDto{
     public status?: string
 
     @IsOptional()
-    @IsNumber()
-    public experience?: number
+    @IsString()
+    public experience?: string
 
     @IsString()
     @IsOptional()
-    public addressZipCode: string
+    public address: string
 
     @IsOptional()
     @IsString()
     public password?: string
+
+    @IsOptional()
+    @IsString()
+    public empId: string
 }
